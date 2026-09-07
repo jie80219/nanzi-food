@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="高雄楠梓區美食清單：價位、時段、一週營業時間與 Google 地圖導航。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="楠梓吃什麼">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FAF7F4" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#15130F" media="(prefers-color-scheme:dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>楠梓吃什麼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#FAF7F4; --surface:#FFFFFF; --surface-2:#F3EFEA;
+  --line:#E5DED6; --line-strong:#D3C8BD;
+  --ink:#1F1B18; --ink-2:#6E645B; --ink-3:#9A8F85;
+  --accent:#C33A20; --accent-ink:#FFFFFF; --accent-soft:#FAE7E1;
+  --gold:#A8720F; --gold-soft:#F8EEDA; --on-gold:#FFFFFF;
+  --open:#2C6B4C; --open-soft:#E2F0E7;
+  --shadow:0 1px 2px rgba(31,27,24,.06),0 6px 18px -12px rgba(31,27,24,.30);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#15130F; --surface:#201D19; --surface-2:#292420;
+    --line:#332D27; --line-strong:#453D35;
+    --ink:#F2ECE5; --ink-2:#AC9F93; --ink-3:#7E7269;
+    --accent:#F07A5A; --accent-ink:#1A0F0B; --accent-soft:#3A211A;
+    --gold:#DBA950; --gold-soft:#362B17; --on-gold:#1A0F0B;
+    --open:#6FC095; --open-soft:#1D3227;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 20px -14px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15130F; --surface:#201D19; --surface-2:#292420;
+  --line:#332D27; --line-strong:#453D35;
+  --ink:#F2ECE5; --ink-2:#AC9F93; --ink-3:#7E7269;
+  --accent:#F07A5A; --accent-ink:#1A0F0B; --accent-soft:#3A211A;
+  --gold:#DBA950; --gold-soft:#362B17; --on-gold:#1A0F0B;
+  --open:#6FC095; --open-soft:#1D3227;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 20px -14px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Heiti TC",system-ui,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:600px;margin:0 auto;
+  padding:0 calc(14px + env(safe-area-inset-right)) calc(88px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
+}
+html{-webkit-text-size-adjust:100%}
+body{overscroll-behavior-y:none}
+.mono{font-family:"IBM Plex Mono","SFMono-Regular",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+.mast{padding:26px 0 16px}
+.kicker{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin:0 0 8px
+}
+h1{
+  font-family:"Noto Serif TC",serif;font-weight:700;
+  font-size:34px;line-height:1.15;margin:0;letter-spacing:.01em;text-wrap:balance
+}
+.dek{margin:8px 0 0;color:var(--ink-2);font-size:13.5px;max-width:44ch}
+.stamp{
+  display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:14px;
+  font-size:11.5px;color:var(--ink-3);
+}
+.stamp b{color:var(--ink-2);font-weight:500}
+
+/* ---------- controls ---------- */
+.controls{
+  position:sticky;top:0;z-index:20;background:var(--bg);
+  padding:10px 0 8px;border-bottom:1px solid var(--line);
+  margin-bottom:16px;
+}
+.searchrow{display:flex;gap:8px;align-items:center}
+.search{
+  flex:1;min-width:0;appearance:none;border:1px solid var(--line-strong);
+  background:var(--surface);color:var(--ink);border-radius:9px;
+  padding:10px 12px;font:inherit;font-size:16px;min-height:44px;
+}
+.search::placeholder{color:var(--ink-3)}
+.search:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.nowbtn{
+  flex:none;border:1px solid var(--line-strong);background:var(--surface);
+  color:var(--ink-2);border-radius:9px;padding:0 12px;font:inherit;
+  font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;min-height:44px;
+  -webkit-tap-highlight-color:transparent;
+}
+.nowbtn .dot{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
+.nowbtn[aria-pressed="true"]{background:var(--open-soft);border-color:var(--open);color:var(--open)}
+.nowbtn[aria-pressed="true"] .dot{background:var(--open)}
+
+.filters{margin-top:9px;display:flex;flex-direction:column;gap:7px}
+.badge{
+  background:var(--accent);color:var(--accent-ink);border-radius:999px;
+  min-width:17px;height:17px;padding:0 5px;font-size:11px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center
+}
+#fbtn[aria-expanded="true"]{background:var(--surface-2);color:var(--ink);border-color:var(--ink-3)}
+.totop{
+  position:fixed;right:calc(16px + env(safe-area-inset-right));
+  bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;
+  width:46px;height:46px;border-radius:50%;border:1px solid var(--line-strong);
+  background:var(--surface);color:var(--ink);box-shadow:var(--shadow);
+  font-size:17px;line-height:1;cursor:pointer;display:none;
+  align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent
+}
+.totop.show{display:flex}
+.frow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px;-webkit-overflow-scrolling:touch}
+.frow::-webkit-scrollbar{display:none}
+.flabel{
+  flex:none;align-self:center;font-size:10.5px;letter-spacing:.12em;
+  color:var(--ink-3);width:30px;text-transform:uppercase;font-weight:700
+}
+.chip{
+  flex:none;border:1px solid var(--line-strong);background:transparent;
+  color:var(--ink-2);border-radius:999px;padding:0 13px;font:inherit;
+  font-size:13px;cursor:pointer;white-space:nowrap;min-height:36px;
+  display:inline-flex;align-items:center;-webkit-tap-highlight-color:transparent;
+}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.p[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+
+.tally{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin:14px 0 10px;font-size:12px;color:var(--ink-3)
+}
+.reset{
+  background:none;border:none;padding:0;font:inherit;font-size:12px;
+  color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px
+}
+
+/* ---------- cards ---------- */
+.list{display:flex;flex-direction:column;gap:10px}
+.card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:14px 14px 12px;box-shadow:var(--shadow);
+  position:relative;
+}
+.card.out{border-style:dashed;background:var(--surface-2)}
+.chead{display:flex;gap:10px;align-items:flex-start}
+.cname{
+  font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;
+  line-height:1.3;margin:0;flex:1;min-width:0;text-wrap:balance
+}
+.price{
+  flex:none;font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:14px;
+  color:var(--gold);background:var(--gold-soft);border-radius:6px;padding:2px 7px;letter-spacing:.04em
+}
+.crow{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;align-items:center}
+.tag{
+  font-size:11.5px;padding:2px 8px;border-radius:5px;
+  background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)
+}
+.tag.cat{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:500}
+.status{
+  font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:5px;
+  display:inline-flex;align-items:center;gap:5px
+}
+.status.on{background:var(--open-soft);color:var(--open)}
+.status.off{background:var(--surface-2);color:var(--ink-3)}
+.status.unk{background:var(--gold-soft);color:var(--gold)}
+.status .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.items{margin:10px 0 0;font-size:13.5px;color:var(--ink-2)}
+.items b{color:var(--ink);font-weight:500}
+.note{
+  margin:8px 0 0;font-size:12.5px;color:var(--ink-2);
+  border-left:2px solid var(--line-strong);padding-left:9px
+}
+.note.warn{border-left-color:var(--gold);color:var(--gold)}
+
+.today{
+  margin-top:11px;display:flex;align-items:baseline;gap:8px;
+  font-size:13.5px;border-top:1px solid var(--line);padding-top:10px
+}
+.today .lbl{font-size:11px;color:var(--ink-3);flex:none;letter-spacing:.08em}
+.today .val{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;color:var(--ink)}
+details.week{margin-top:6px}
+details.week summary{
+  min-height:34px;font-size:12.5px;color:var(--accent);cursor:pointer;list-style:none;
+  display:inline-flex;align-items:center;gap:4px;padding:2px 0
+}
+details.week summary::-webkit-details-marker{display:none}
+details.week summary::after{content:"▾";font-size:9px;transform:translateY(-1px)}
+details.week[open] summary::after{content:"▴"}
+.wk{
+  display:grid;grid-template-columns:auto 1fr;gap:2px 12px;margin-top:7px;
+  font-size:12.5px;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  color:var(--ink-2)
+}
+.wk .d{color:var(--ink-3)}
+.wk .today-row{color:var(--ink);font-weight:500}
+.wk .cl{color:var(--ink-3)}
+
+.addr{margin-top:10px;font-size:13px;color:var(--ink-2);display:flex;gap:7px;align-items:flex-start}
+.addr svg{flex:none;margin-top:3px;opacity:.6}
+.acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.btn{
+  border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);
+  border-radius:8px;padding:0 14px;font:inherit;font-size:13.5px;font-weight:500;
+  cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  min-height:44px;-webkit-tap-highlight-color:transparent
+}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn.go{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.mini{padding:0;width:44px;justify-content:center;font-size:17px;line-height:1;border-radius:8px}
+.btn.mini.first{margin-left:auto}
+.btn.mini[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold)}
+.btn.mini2[aria-pressed="true"]{background:var(--open-soft);border-color:var(--open)}
+
+.stale{
+  display:none;border:1px solid var(--gold);background:var(--gold-soft);
+  color:var(--gold);border-radius:10px;padding:11px 13px;margin-bottom:12px;
+  font-size:13px;line-height:1.6
+}
+.stale.show{display:block}
+.stale b{font-weight:700}
+.empty{
+  text-align:center;padding:48px 20px;color:var(--ink-3);font-size:14px;
+  border:1px dashed var(--line-strong);border-radius:12px
+}
+
+/* ---------- footer ---------- */
+.foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+.foot h2{font-family:"Noto Serif TC",serif;font-size:15px;margin:0 0 8px;color:var(--ink-2)}
+.foot p{margin:0 0 9px;line-height:1.7}
+.foot code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-2)}
+@media (prefers-reduced-motion:no-preference){
+  .card{transition:border-color .15s ease}
+}
+
+/* --- 獨立版 reset（Artifact 平台原本會自動補上的部分） --- */
+html{color-scheme:light dark}
+[hidden]{display:none!important}
+img{max-width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">高雄 · 楠梓區</p>
+    <h1>楠梓吃什麼</h1>
+    <p class="dek">從 23 篇 Threads 貼文與留言整理出的在地食堂清單，地址與營業時間逐家對過 Google 地圖。</p>
+    <div class="stamp">
+      <span>資料查證日 <b class="mono">2026-09-07</b></span>
+      <span>共 <b id="total" class="mono">0</b> 家</span>
+      <span>中心點 <b>後昌路 132 號</b>・車程 15 分內</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="searchrow">
+      <input id="q" class="search" type="search" placeholder="搜尋店名、菜色、路名⋯" aria-label="搜尋">
+      <button id="nowbtn" class="nowbtn" aria-pressed="false"><span class="dot"></span>營業中</button>
+      <button id="fbtn" class="nowbtn" type="button" aria-expanded="false" aria-controls="filters">篩選<span class="badge" id="fcount" hidden>0</span></button>
+    </div>
+    <div class="filters" id="filters" hidden>
+      <div class="frow" id="f-slot"><span class="flabel">時段</span></div>
+      <div class="frow" id="f-price"><span class="flabel">價位</span></div>
+      <div class="frow" id="f-cat"><span class="flabel">種類</span></div>
+    </div>
+  </div>
+
+  <div class="tally">
+    <span id="count">—</span>
+    <button class="reset" id="reset" hidden>清除篩選</button>
+  </div>
+
+  <div class="stale" id="stale"></div>
+  <main class="list" id="list"></main>
+
+  <footer class="foot">
+    <h2>關於這份清單</h2>
+    <p>店名與推薦菜色來自你收藏的 23 篇 Threads 貼文（含留言區補充）。<b>地址與營業時間是另外查 Google 地圖得到的</b>，不是貼文原文——小吃店常改時間，出發前請點「導航」再確認一次當日公告。</p>
+    <p>標「留言補充」的是別人在同一串留言裡推薦、不在原貼文內的店；標「待確認」的是資料有出入或查不到，已在卡片上寫明原因。價位分級以單人一餐計：<code>$</code> 150 元以下、<code>$$</code> 150–500、<code>$$$</code> 500 以上。</p>
+    <p>★想吃／✓吃過只存在你目前這台裝置的瀏覽器裡，換手機或換瀏覽器不會跟著走。</p>
+    <p>有一篇貼文（@foodiemylife「楠梓工程師朋友推薦的平價丼飯，以炸物為主」）貼文與留言都沒有店名，無法辨識，所以沒有收進清單。</p>
+  </footer>
+</div>
+<button class="totop" id="totop" type="button" aria-label="回到頂端">↑</button>
+
+<script>
+const VERIFIED = "2026-09-07";
+// hours: 週日=0 ... 週六=6，每天為 [開始分鐘, 結束分鐘] 的區間陣列；跨日以 >1440 表示
+const D = [
+ {n:"達叔鍋燒",cat:"麵食鍋燒",p:1,addr:"高雄市楠梓區藍昌路431號",
+  items:"麻奶鍋燒、沙茶鍋燒（老闆娘手炒沙茶）、咖哩豬排飯",
+  note:"老闆在留言區現身：湯頭用昆布柴魚熬，賣完就沒了，想吃要早去。可用 LINE Pay。",
+  h:[[],[[660,840],[960,1200]],[[660,840],[960,1200]],[[660,840],[960,1200]],[[660,840],[960,1200]],[[660,840],[960,1200]],[]],
+  src:"https://www.threads.com/share/LhQBGeMPn/"},
+
+ {n:"大四喜食堂 楠梓店",cat:"麵食鍋燒",p:1,addr:"高雄市楠梓區朝新路112號1樓",
+  items:"炒飯、炒意麵、小火鍋（最低 150）、熱炒、炸物",
+  note:"留言常提到出餐偏慢，趕時間的話先打電話。",
+  h:[[[660,1320]],[[660,1320]],[[660,1320]],[[660,1320]],[[660,1320]],[[660,1320]],[[660,1320]]],
+  src:"https://www.threads.com/share/HlGE2tfYL/"},
+
+ {n:"福氣來手工水餃",cat:"小吃點心",p:1,addr:"高雄市楠梓區土庫二路201號",
+  items:"鍋貼（原貼文寫煎餃，作者後來更正）、手工水餃、餛飩",
+  note:"可買生水餃回家煮。留言有人反映電話點餐態度不佳。",
+  h:[[[690,840],[990,1200]],[[690,840],[990,1200]],[[690,840],[990,1200]],[[690,840],[990,1200]],[[690,840],[990,1200]],[[690,840],[990,1200]],[[690,840],[990,1200]]],
+  src:"https://www.threads.com/share/GDCVeNlOd/"},
+
+ {n:"烤骨學院 楠梓店",cat:"燒烤吃到飽",p:3,addr:"高雄市楠梓區大學二十三街26號之一",
+  items:"魚貨自由選 11 種做法、代客料理、限量牛肋條與橫隔膜",
+  note:"吃到飽 779 元（原 699 已調漲）。五公里內有代客泊車。貼文寫週一至週五營業，但 Google 地圖顯示週二公休——去之前先確認。",
+  warn:true,
+  h:[[[720,1440]],[[960,1440]],[],[[960,1440]],[[960,1440]],[[960,1440]],[[720,1440]]],
+  src:"https://www.threads.com/share/EW_FR6G95/"},
+
+ {n:"雙木便當",cat:"飯食便當",p:1,addr:"高雄市楠梓區後昌路785號",
+  items:"炸雞腿＋紅糟肉雙拼便當 120、大雞排（跟便當盒差不多大）",
+  note:"有外送，建議先電話預訂 0981-558-253。",
+  h:[[[600,780],[960,1140]],[[600,780],[960,1140]],[[600,780],[960,1140]],[[600,780],[960,1140]],[[600,780],[960,1140]],[[600,780],[960,1140]],[[600,780],[960,1140]]],
+  src:"https://www.threads.com/share/FmJM1POYU/"},
+
+ {n:"洺夏和野鍋物",cat:"火鍋",p:2,addr:"高雄市楠梓區朝新路185-2號",
+  items:"14 種湯頭、麻辣鍋配牛肉、點鍋送無限量自助吧",
+  note:"貼文寫每週三公休，但 Google 地圖顯示天天營業——週三要去先打電話。",
+  warn:true,
+  h:[[[660,1380]],[[660,1380]],[[660,1380]],[[660,1380]],[[660,1380]],[[660,1380]],[[660,1380]]],
+  src:"https://www.threads.com/share/F4XYDynL5/"},
+
+ {n:"饗翻天臭臭鍋 楠梓店",cat:"火鍋",p:1,addr:"高雄市楠梓區右昌街213號",
+  items:"外帶臭臭鍋加碼到 10 片豬肉；牛／羊 9 片",
+  note:"當月壽星、60 歲以上長者訂外帶多送海陸拼盤。",
+  h:[[[660,1290]],[[660,840],[1020,1290]],[[660,840],[1020,1290]],[[660,840],[1020,1290]],[[660,840],[1020,1290]],[[660,840],[1020,1290]],[[660,1290]]],
+  src:"https://www.threads.com/share/ILQLyN-N0/"},
+
+ {n:"熊仔炸饅頭",cat:"燒烤宵夜",p:1,addr:"高雄市楠梓區興楠路205號",
+  items:"炸饅頭、炸物、飲料",
+  note:"這篇原文是徵人啟事，不是食記；營業時間以 Google 地圖為準。",
+  h:[[],[[1020,1530]],[[1020,1530]],[[1020,1530]],[[1020,1530]],[[1020,1530]],[[1020,1530]]],
+  src:"https://www.threads.com/share/FEd-WBpc7/"},
+
+ {n:"矮仔魯爌肉飯",cat:"飯食便當",p:1,addr:"高雄市楠梓區朝新路116號",
+  items:"爌肉飯 50、炒麵 30、肉燥飯 25",
+  note:"高大、高科大學生的月底救命名單之一。",
+  h:[[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]],[]],
+  src:"https://www.threads.com/share/QgagdbhI-/"},
+
+ {n:"米香傳統小吃",cat:"飯食便當",p:1,addr:"高雄市楠梓區創新路62號",
+  items:"鴨肉飯 45",
+  h:[[],[[960,1320]],[[960,1320]],[[960,1320]],[[960,1320]],[[960,1320]],[]],
+  src:"https://www.threads.com/share/QgagdbhI-/"},
+
+ {n:"哩賀黑輪伯",cat:"小吃點心",p:1,addr:"高雄市楠梓區旗楠路801號",
+  items:"黑輪、關東煮，一份 20–30 元",
+  h:[[],[[930,1320]],[[930,1320]],[[930,1320]],[[930,1320]],[[930,1320]],[[930,1320]]],
+  src:"https://www.threads.com/share/QgagdbhI-/"},
+
+ {n:"老是來吃燒烤",cat:"燒烤宵夜",p:1,addr:"高雄市楠梓區清成街86號",
+  items:"串燒一串 15–30 元",
+  h:[[],[[1065,1530]],[[1065,1530]],[[1065,1530]],[[1065,1530]],[[1065,1530]],[[1065,1530]]],
+  src:"https://www.threads.com/share/QgagdbhI-/"},
+
+ {n:"土庫陽春麵肉燥飯",cat:"麵食鍋燒",p:1,addr:"高雄市楠梓區土庫路232號",
+  items:"陽春麵、爌肉飯 50、肉燥飯",
+  h:[[],[[630,1200]],[[630,1200]],[[630,1200]],[[630,1200]],[[630,1200]],[[630,1200]]],
+  src:"https://www.threads.com/share/QgagdbhI-/"},
+
+ {n:"好食丼 楠梓惠民店",cat:"日式丼飯",p:1,addr:"高雄市楠梓區惠民路79號",
+  items:"豬梅、雞排、蝦蝦叫雙拼丼飯，可免費加飯",
+  note:"高雄多家分店，這是楠梓惠民店。",
+  h:[[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]],[[660,1230]]],
+  src:"https://www.threads.com/share/D2KOdu9YP/"},
+
+ {n:"Small萱牛奶特色鍋物",cat:"火鍋",p:2,addr:"高雄市楠梓區遠中路528號",
+  items:"南瓜牛奶鍋、菜盤份量大、附飲料",
+  note:"留言說橋頭店、大社店、楠梓火車站店都收了，只剩高雄大學這間。",
+  h:[[[690,1320]],[[690,1320]],[[690,1320]],[[690,1320]],[[690,1320]],[[690,1320]],[[690,1320]]],
+  src:"https://www.threads.com/share/IcI3xl8-N/"},
+
+ {n:"詠心煎（詠心蚵仔煎）",cat:"小吃點心",p:1,addr:"高雄市楠梓區藍田路233號",
+  items:"脆皮蚵仔煎（食尚玩家推薦），可請老闆娘煎更酥、記得加辣",
+  h:[[[660,840],[1020,1200]],[],[[660,840],[1020,1200]],[[660,840],[1020,1200]],[[660,840],[1020,1200]],[[660,840],[1020,1200]],[[660,840],[1020,1200]]],
+  src:"https://www.threads.com/share/HNoFP_Nd8/"},
+
+ {n:"橡果咖啡輕食坊",cat:"義式輕食",p:2,addr:"高雄市楠梓區瑞屏路108號",
+  items:"義大利麵、燉飯、咖哩",
+  note:"高科大楠梓校區學生愛店。內外場各一人，出餐慢要有心理準備；漲過價、也取消了積點卡。",
+  h:[[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]]],
+  src:"https://www.threads.com/share/DzhuFrVfn/"},
+
+ {n:"內惟嫩仙草",cat:"甜品飲料",p:1,addr:"高雄市楠梓區大學西路68號",
+  items:"仙草冰、嫩仙草",
+  note:"老闆自陳原本在內惟開了 30 年，後來搬到楠梓。",
+  h:[[[900,1200]],[[900,1200]],[[900,1200]],[[900,1200]],[[900,1200]],[[900,1200]],[]],
+  src:"https://www.threads.com/share/E37aysBfB/"},
+
+ {n:"東耀生鮮 生魚片專賣",cat:"生鮮生魚片",p:2,addr:"高雄市楠梓區德民路977號 德民市場五街19號",
+  items:"生魚片自由選、自己配（貼文示範鮪魚 150＋鮭魚 200）",
+  note:"在德民市場攤位，下午才開，賣完就收。",
+  h:[[[870,1110]],[],[[870,1110]],[[870,1110]],[[870,1110]],[[870,1110]],[[870,1110]]],
+  src:"https://www.threads.com/share/D4WdPlae2/"},
+
+ {n:"鶴味道",cat:"飯食便當",p:1,addr:"高雄市楠梓區樂群路67號",
+  items:"肉燥飯（貼文那份 80 元）、涼拌黃瓜、筍子湯",
+  note:"原貼文只給地址沒給店名，靠地址在地圖上比對出來的。留言說是以前那間刀削麵的位置，換位子後味道一樣。",
+  h:[[[630,840],[960,1200]],[[630,840],[960,1200]],[[630,840],[960,1200]],[[630,840],[960,1200]],[[630,840],[960,1200]],[],[]],
+  src:"https://www.threads.com/share/FfiQAwTib/"},
+
+ {n:"老牌豬血湯",cat:"小吃點心",p:1,addr:"高雄市楠梓區後昌路1290號",
+  items:"炒米粉 小 30／大 35、大碗綜合湯 70（豬血、大腸、肝連肉）",
+  note:"由一對行動不便的夫婦經營，清晨就開。原貼文沒寫店名與地址，是留言區網友提供門牌、再對地圖確認的。用完餐請自己收碗筷。",
+  h:[[[360,780]],[],[[360,810]],[[360,810]],[[360,810]],[[360,810]],[[360,780]]],
+  src:"https://www.threads.com/share/DuOnj9kXd/"},
+
+ {n:"老鳳港式路邊小吃",cat:"港式小吃",p:1,addr:"高雄市楠梓區翠屏路107號",
+  items:"港式蘿蔔糕、西多士、漏奶華、魚肉燒賣、韭菜餃、乾炒肉絲河粉",
+  note:"流動攤車，Google 地圖查無此店，貼文的「出攤時間」欄位是空的——營業時間待確認，手工製作數量有限，建議先用 IG／FB 預訂。",
+  warn:true,unknownHours:true,
+  h:[[],[],[],[],[],[],[]],
+  src:"https://www.threads.com/share/D3lh45P0c/"},
+
+ {n:"火牛牛肉麵 楠梓店",cat:"麵食鍋燒",p:1,addr:"高雄市楠梓區藍昌路440號",
+  items:"牛肉麵、滷蘿蔔、蒸餃",
+  note:"留言補充：達叔鍋燒對面，網友稱它「阿火牛肉麵」，地圖登記名是火牛牛肉麵。",
+  from:"留言補充",
+  h:[[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]],[[660,1260]]],
+  src:"https://www.threads.com/share/LhQBGeMPn/"},
+
+ {n:"Lane 235 Pasta 楠梓",cat:"義式輕食",p:2,addr:"高雄市楠梓區大學三十二街111號",
+  items:"義大利麵",
+  note:"留言補充：由「橋頭楠梓」那串的網友推薦，原 po 回覆說常吃、好吃。",
+  from:"留言補充",
+  h:[[[690,1260]],[[690,1260]],[[690,1260]],[[690,1260]],[[690,1260]],[[690,1260]],[[690,1260]]],
+  src:"https://www.threads.com/share/HNoFP_Nd8/"},
+
+ {n:"陳記尖東燒臘便當專賣店",cat:"飯食便當",p:1,addr:"高雄市楠梓區後昌路1055號",
+  items:"鴨腿、油雞腿、燒腩",
+  note:"留言補充：網友在蚵仔煎那串推薦，還附了門牌。",
+  from:"留言補充",
+  h:[[],[[630,810],[990,1170]],[[630,810],[990,1170]],[[630,810],[990,1170]],[[630,810],[990,1170]],[[630,810],[990,1170]],[[630,810],[990,1170]]],
+  src:"https://www.threads.com/share/HNoFP_Nd8/"},
+
+ {n:"柴點 ChaiDian",cat:"燒烤宵夜",p:1,addr:"高雄市楠梓區藍昌路467號",
+  items:"鍋燒意麵、咖哩豬排",
+  note:"待確認：@pasandra_pie 那篇「大碗只要 200、開到半夜 1:00」沒寫店名，留言只說「你看扛棒」。依楠梓區＋營業到凌晨 1 點＋咖哩豬排＋麻奶鍋燒比對，最可能是這家，但沒有確證。",
+  warn:true,from:"推測比對",
+  h:[[],[[1020,1500]],[[1020,1500]],[[1020,1500]],[[1020,1500]],[[1020,1500]],[[1020,1500]]],
+  src:"https://www.threads.com/share/E4yYk7tJU/"},
+
+ {n:"豪哥水餃",cat:"小吃點心",p:1,addr:"高雄市燕巢區鳳祈路127-5號",
+  items:"水餃一顆 5 元、酸辣湯 30",
+  note:"超出範圍：貼文列在楠梓銅板美食，實際店址在燕巢區，離後昌路約 25 分鐘車程。留言區也有人指出「豪哥是在燕巢對吧」。",
+  out:true,
+  h:[[],[[660,840]],[[660,840]],[[660,840]],[[660,840]],[[660,840]],[]],
+  src:"https://www.threads.com/share/QgagdbhI-/"},
+];
+
+const DAYS = ["週日","週一","週二","週三","週四","週五","週六"];
+const SLOTS = [
+  {k:"早餐",r:[300,630]},
+  {k:"午餐",r:[630,870]},
+  {k:"晚餐",r:[990,1260]},
+  {k:"宵夜",r:[1260,1680]},
+];
+const PRICES = [{k:1,label:"$ ≤150"},{k:2,label:"$$ 150–500"},{k:3,label:"$$$ 500+"}];
+const PSYM = {1:"$",2:"$$",3:"$$$"};
+
+const fmt = m => { const h=Math.floor((m%1440)/60), mm=m%60; return String(h).padStart(2,"0")+":"+String(mm).padStart(2,"0"); };
+const dayText = ivs => !ivs || !ivs.length ? "公休"
+  : ivs.map(([s,e]) => fmt(s)+"–"+fmt(e)+(e>=1440?"（隔日）":"")).join("、");
+const overlap=(a1,a2,b1,b2)=>a1<b2&&b1<a2;
+
+function slotsOf(st){
+  if(st.unknownHours) return [];
+  const set=new Set();
+  st.h.forEach(ivs=>ivs.forEach(([s,e])=>{
+    SLOTS.forEach(sl=>{
+      if(overlap(s,e,sl.r[0],sl.r[1])||overlap(s,e,sl.r[0]+1440,sl.r[1]+1440)) set.add(sl.k);
+    });
+  }));
+  return SLOTS.map(s=>s.k).filter(k=>set.has(k));
+}
+function taipeiNow(){
+  const d=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Taipei"}));
+  return {day:d.getDay(),min:d.getHours()*60+d.getMinutes()};
+}
+function openState(st,now){
+  if(st.unknownHours) return {s:"unk",t:"時間待確認"};
+  const y=(now.day+6)%7;
+  const todayOpen=(st.h[now.day]||[]).some(([s,e])=>now.min>=s&&now.min<e);
+  const spill=(st.h[y]||[]).some(([s,e])=>e>1440&&now.min<e-1440);
+  if(todayOpen||spill) return {s:"on",t:"營業中"};
+  return {s:"off",t:(st.h[now.day]||[]).length?"休息中":"今日公休"};
+}
+
+const state={q:"",now:false,slot:new Set(),price:new Set(),cat:new Set(),};
+const FAV="nanzi-fav-v1", ATE="nanzi-ate-v1";
+const load=k=>{try{return new Set(JSON.parse(localStorage.getItem(k)||"[]"))}catch(e){return new Set()}};
+const save=(k,s)=>{try{localStorage.setItem(k,JSON.stringify([...s]))}catch(e){}};
+let fav=load(FAV), ate=load(ATE);
+
+const cats=[...new Set(D.map(d=>d.cat))];
+function chipRow(id,vals,cls){
+  const row=document.getElementById(id);
+  vals.forEach(v=>{
+    const b=document.createElement("button");
+    b.className="chip"+(cls?" "+cls:""); b.type="button";
+    b.textContent=v.label; b.setAttribute("aria-pressed","false");
+    b.onclick=()=>{
+      const set=state[v.group];
+      set.has(v.key)?set.delete(v.key):set.add(v.key);
+      b.setAttribute("aria-pressed",set.has(v.key)?"true":"false");
+      render();
+    };
+    row.appendChild(b);
+  });
+}
+chipRow("f-slot",SLOTS.map(s=>({label:s.k,key:s.k,group:"slot"})));
+chipRow("f-price",PRICES.map(p=>({label:p.label,key:p.k,group:"price"})),"p");
+chipRow("f-cat",cats.map(c=>({label:c,key:c,group:"cat"})));
+
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value.trim();render();});
+const nowBtn=document.getElementById("nowbtn");
+nowBtn.onclick=()=>{state.now=!state.now;nowBtn.setAttribute("aria-pressed",String(state.now));render();};
+const fbtn=document.getElementById("fbtn"),fpanel=document.getElementById("filters"),fcount=document.getElementById("fcount");
+const FOPEN="nanzi-filters-open";
+function setFilters(open){
+  fpanel.hidden=!open; fbtn.setAttribute("aria-expanded",String(open));
+  try{localStorage.setItem(FOPEN,open?"1":"0")}catch(e){}
+}
+try{setFilters(localStorage.getItem(FOPEN)==="1")}catch(e){setFilters(false)}
+fbtn.onclick=()=>setFilters(fpanel.hidden);
+
+const totop=document.getElementById("totop");
+addEventListener("scroll",()=>{totop.classList.toggle("show",scrollY>700)},{passive:true});
+totop.onclick=()=>scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
+
+document.getElementById("reset").onclick=()=>{
+  state.q="";state.now=false;state.slot.clear();state.price.clear();state.cat.clear();
+  document.getElementById("q").value="";
+  document.querySelectorAll(".chip,#nowbtn").forEach(b=>b.setAttribute("aria-pressed","false"));
+  render();
+};
+
+const mapUrl=st=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(st.n+" "+st.addr);
+const PIN='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+function card(st,now){
+  const el=document.createElement("article");
+  el.className="card"+(st.out?" out":"");
+  const os=openState(st,now);
+  const slots=slotsOf(st);
+  const id=st.n;
+  const today=dayText(st.h[now.day]);
+
+  el.innerHTML=`
+    <div class="chead">
+      <h3 class="cname">${st.n}</h3>
+      <span class="price mono">${PSYM[st.p]}</span>
+    </div>
+    <div class="crow">
+      <span class="status ${os.s}"><span class="dot"></span>${os.t}</span>
+      <span class="tag cat">${st.cat}</span>
+      ${slots.map(s=>`<span class="tag">${s}</span>`).join("")}
+      ${st.from?`<span class="tag">${st.from}</span>`:""}
+      ${st.out?`<span class="tag">範圍外</span>`:""}
+    </div>
+    ${st.items?`<p class="items"><b>推薦</b>　${st.items}</p>`:""}
+    ${st.note?`<p class="note${st.warn?" warn":""}">${st.note}</p>`:""}
+    <div class="today">
+      <span class="lbl">今日</span>
+      <span class="val">${st.unknownHours?"時間待確認":today}</span>
+    </div>
+    <details class="week"><summary>一週營業時間</summary>
+      <div class="wk">
+        ${DAYS.map((d,i)=>{
+          const t=st.unknownHours?"待確認":dayText(st.h[i]);
+          const cl=(!st.unknownHours&&!(st.h[i]||[]).length)?"cl":"";
+          return `<span class="d ${i===now.day?"today-row":""}">${d}</span><span class="${cl} ${i===now.day?"today-row":""}">${t}</span>`;
+        }).join("")}
+      </div>
+    </details>
+    <p class="addr">${PIN}<span>${st.addr}</span></p>
+    <div class="acts">
+      <a class="btn go" href="${mapUrl(st)}" target="_blank" rel="noopener">開地圖導航</a>
+      <a class="btn" href="${st.src}" target="_blank" rel="noopener">原文</a>
+      <button class="btn mini first" type="button" title="想吃" aria-label="標記想吃 ${st.n}" aria-pressed="${fav.has(id)}">★</button>
+      <button class="btn mini mini2" type="button" title="吃過" aria-label="標記吃過 ${st.n}" aria-pressed="${ate.has(id)}">✓</button>
+    </div>`;
+
+  const [bf,ba]=el.querySelectorAll(".mini");
+  bf.onclick=()=>{fav.has(id)?fav.delete(id):fav.add(id);save(FAV,fav);bf.setAttribute("aria-pressed",String(fav.has(id)));};
+  ba.onclick=()=>{ate.has(id)?ate.delete(id):ate.add(id);save(ATE,ate);ba.setAttribute("aria-pressed",String(ate.has(id)));};
+  return el;
+}
+
+function render(){
+  const now=taipeiNow();
+  const q=state.q.toLowerCase();
+  let rows=D.filter(st=>{
+    if(q && !((st.n+" "+st.cat+" "+st.addr+" "+(st.items||"")+" "+(st.note||"")).toLowerCase().includes(q))) return false;
+    if(state.price.size && !state.price.has(st.p)) return false;
+    if(state.cat.size && !state.cat.has(st.cat)) return false;
+    if(state.slot.size){ const s=slotsOf(st); if(![...state.slot].every(k=>s.includes(k))) return false; }
+    if(state.now && openState(st,now).s!=="on") return false;
+    return true;
+  });
+  rows.sort((a,b)=>{
+    const oa=openState(a,now).s==="on"?0:1, ob=openState(b,now).s==="on"?0:1;
+    if(oa!==ob) return oa-ob;
+    if(!!a.out!==!!b.out) return a.out?1:-1;
+    return a.n.localeCompare(b.n,"zh-Hant");
+  });
+
+  const list=document.getElementById("list");
+  list.innerHTML="";
+  if(!rows.length){
+    const e=document.createElement("div");
+    e.className="empty";
+    e.textContent=state.now?"這個時段沒有符合條件的店在營業，試著關掉「現在營業」。":"沒有符合條件的店，放寬一點篩選看看。";
+    list.appendChild(e);
+  } else rows.forEach(st=>list.appendChild(card(st,now)));
+
+  const active=state.q||state.now||state.slot.size||state.price.size||state.cat.size;
+  document.getElementById("count").textContent=
+    active?`${rows.length} 家符合條件（共 ${D.length} 家）`:`${D.length} 家・依「現在營業中」排序`;
+  document.getElementById("reset").hidden=!active;
+  const nf=state.slot.size+state.price.size+state.cat.size;
+  fcount.hidden=!nf; fcount.textContent=nf;
+  document.getElementById("total").textContent=D.length;
+}
+function staleCheck(){
+  const el=document.getElementById("stale");
+  const days=Math.floor((Date.now()-new Date(VERIFIED+"T00:00:00+08:00"))/86400000);
+  if(days<180){el.classList.remove("show");return;}
+  const mo=Math.floor(days/30);
+  el.innerHTML=`<b>資料已 ${mo} 個月沒更新了。</b>小吃店改時間、搬家、收攤都很快，`+
+    `這頁的營業時間查證日是 ${VERIFIED}。出發前請按各店的「開地圖導航」，`+
+    `Google 地圖上的營業狀態才是即時的。`;
+  el.classList.add("show");
+}
+staleCheck();
+render();
+setInterval(render,60000);
+</script>
+<script>
+if("serviceWorker" in navigator){
+  addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "楠梓吃什麼",
+  "short_name": "楠梓吃什麼",
+  "description": "高雄楠梓區美食清單：價位、時段、一週營業時間與 Google 地圖導航。",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F4",
+  "theme_color": "#C33A20",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
