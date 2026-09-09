@@ -1,5 +1,5 @@
 // 楠梓吃什麼 — 離線快取。改版時把 VERSION 加一。
-const VERSION = "v3";
+const VERSION = "v4";
 const SHELL = "shell-" + VERSION;
 const FONTS = "fonts-" + VERSION;
 const ASSETS = [
